@@ -1,0 +1,55 @@
+version: '3'
+
+services:
+  jupyterhub:
+    build: jupyterhub
+    image: jupyterhub_img
+    restart: always
+    networks:
+      - default
+      - webproxy
+    volumes:
+      - jupyterhub-data:/srv/jupyterhub
+      - ./jupyterhub/jupyterhub_config.py:/srv/jupyterhub/jupyterhub_config.py
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - DOCKER_JUPYTERLAB_IMAGE=${DOCKER_JUPYTERLAB_IMAGE}
+      - DOCKER_NETWORK_NAME=jupyter
+      - GITLAB_URL=https://gitlab.${GL_DOMAIN}
+      - GITLAB_CLIENT_ID=${JH_GITLAB_APPLICATION_ID}
+      - GITLAB_CLIENT_SECRET=${JH_GITLAB_SECRET}
+      - HUB_IP=jupyterhub
+      - POSTGRES_HOST=jupyterhub-postgres
+    env_file:
+      - db.env
+    depends_on:
+      - jupyterhub-postgres
+    labels:
+      - traefik.enable=true
+      - traefik.docker.network=webproxy
+      - traefik.http.routers.jupyterhub.entrypoints=web
+      - traefik.http.routers.jupyterhub.rule=Host(`jupyter.${JH_DOMAIN}`)
+      - traefik.http.routers.jupyterhub.middlewares=http2https@file
+      - traefik.http.routers.jupyterhub-sec.entrypoints=websecure
+      - traefik.http.routers.jupyterhub-sec.rule=Host(`jupyter.${JH_DOMAIN}`)
+      - traefik.http.routers.jupyterhub-sec.tls.certresolver=${JH_CERTRESOLVER_NAME}
+      - traefik.http.routers.jupyterhub-sec.middlewares=sts@file
+
+  jupyterhub-postgres:
+    image: postgres:alpine
+    restart: always
+    env_file:
+      - db.env
+    volumes:
+      - jupyterhub-postgres-data:/var/lib/postgresql/data
+
+networks:
+  default:
+    external:
+      name: jupyter
+  webproxy:
+    external: true
+
+volumes:
+  jupyterhub-data:
+  jupyterhub-postgres-data:
