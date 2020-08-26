@@ -88,7 +88,7 @@ The following is required:
 1.  Update environment variables `JH_DOMAIN`, `GL_DOMAIN` and
     `JH_CERTRESOLVER_NAME` in '.env':
     *  Replace `mydomain.com` with your **own domain** that serves the
-       subdomain.
+       **subdomain**.
     *  Replace `mydomain-com` with a valid certificate resolvers name of
        Træfik.
 1.  [Add JupyterHub as an OAuth application](https://docs.gitlab.com/ce/integration/oauth_provider.html#oauth-applications-in-the-admin-area)
@@ -97,7 +97,8 @@ The following is required:
       Name: JupyterHub
       Redirect URL: https://jupyter.mydomain.com/hub/oauth_callback
       ```
-      → Replace `mydomain.com` with your **own domain** that serves the **subdomains**.
+      → Replace `mydomain.com` with your **own domain** that serves the
+      **subdomains**.
     *  Tick "Trusted"
     *  Scopes:
         *  Tick "api"
@@ -117,8 +118,8 @@ The following is required:
     docker-compose up -d
     ```
 
-The image for service jupyterhub will be built now, because it does not exist yet.
-This might take a while...  
+The image for service jupyterhub will be built now, because it does not exist
+yet. This might take a while...  
 → To rebuild the image you must use `docker-compose build` or
 `docker-compose up --build`.
 
