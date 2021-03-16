@@ -1,7 +1,7 @@
 # Jupyter
 
 [This project](https://gitlab.com/b-data/docker/deployments/jupyter) serves as
-a template to run [jupyterhub](https://hub.docker.com/r/jupyterhub/jupyterhub)
+a template to run [jupyterhub](https://gitlab.b-data.ch/jupyterhub/jupyterhub/container_registry)
 with [jupyterlab/r/verse](https://gitlab.b-data.ch/jupyterlab/r/verse/container_registry)
 in docker containers using docker-compose.
 
@@ -45,10 +45,10 @@ The following extensions are pre-installed for **code-server**:
 
 *  **JupyterHub**
     *  Homepage: https://jupyter.org/hub
-    *  Documentation: https://jupyterhub.readthedocs.io/en/1.0.0/
+    *  Documentation: https://jupyterhub.readthedocs.io/en/1.3.0/
 *  **JupyterLab**
     *  Homepage: https://jupyter.org
-    *  Documentation: https://jupyterlab.readthedocs.io/en/1.2.x/
+    *  Documentation: https://jupyterlab.readthedocs.io/en/3.0.x/
 *  **code-server**
     *  Homepage: https://github.com/cdr/code-server
     *  Documentation: https://code.visualstudio.com/Docs
@@ -132,9 +132,9 @@ fine.
 
 ### JupyterHub
 
-*  [Authenticators](https://jupyterhub.readthedocs.io/en/1.0.0/reference/authenticators.html)
+*  [Authenticators](https://jupyterhub.readthedocs.io/en/1.3.0/reference/authenticators.html)
 *  [DockerSpawner API](https://jupyterhub-dockerspawner.readthedocs.io/en/latest/api/index.html)
-*  [The Hub's Database](https://jupyterhub.readthedocs.io/en/1.0.0/reference/database.html)
+*  [The Hub's Database](https://jupyterhub.readthedocs.io/en/1.3.0/reference/database.html)
 
 ### JupyterLab
 
