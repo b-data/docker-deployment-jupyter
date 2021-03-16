@@ -1,17 +1,18 @@
 # Configuration file for jupyterhub.
 
 import os
+import sys
 
 #------------------------------------------------------------------------------
 # JupyterHub(Application) configuration
 #------------------------------------------------------------------------------
-
 ## An Application for starting a Multi-User Jupyter Notebook server.
 
 ## Grant admin users permission to access single-user servers.
 #  
 #  Users should be properly informed if this is enabled.
-#c.JupyterHub.admin_access = False
+#  Default: False
+# c.JupyterHub.admin_access = False
 
 ## Class for authenticating users.
 #  
@@ -56,26 +57,45 @@ import os
 #    - default: jupyterhub.auth.PAMAuthenticator
 #    - dummy: jupyterhub.auth.DummyAuthenticator
 #    - pam: jupyterhub.auth.PAMAuthenticator
+#  Default: 'jupyterhub.auth.PAMAuthenticator'
 from oauthenticator.gitlab import GitLabOAuthenticator
 c.JupyterHub.authenticator_class = GitLabOAuthenticator
 
 ## url for the database. e.g. `sqlite:///jupyterhub.sqlite`
+#  Default: 'sqlite:///jupyterhub.sqlite'
 c.JupyterHub.db_url = 'postgresql://postgres:{password}@{host}/{db}'.format(
     host = os.environ['POSTGRES_HOST'],
     password = os.environ['POSTGRES_PASSWORD'],
     db = os.environ['POSTGRES_DB']
 )
 
+## The ip or hostname for proxies and spawners to use for connecting to the Hub.
+#  
+#  Use when the bind address (`hub_ip`) is 0.0.0.0, :: or otherwise different
+#  from the connect address.
+#  
+#  Default: when `hub_ip` is 0.0.0.0 or ::, use `socket.gethostname()`, otherwise
+#  use `hub_ip`.
+#  
+#  Note: Some spawners or proxy implementations might not support hostnames.
+#  Check your spawner or proxy documentation to see if they have extra
+#  requirements.
+#  
+#  .. versionadded:: 0.8
+#  Default: ''
+c.JupyterHub.hub_connect_ip = 'jupyterhub'
+
 ## The ip address for the Hub process to *bind* to.
 #  
-#  By default, the hub listens on localhost only. This address must be
-#  accessible from the proxy and user servers. You may need to set this to a
-#  public ip or '' for all interfaces if the proxy or user servers are in
-#  containers or on a different host.
+#  By default, the hub listens on localhost only. This address must be accessible
+#  from the proxy and user servers. You may need to set this to a public ip or ''
+#  for all interfaces if the proxy or user servers are in containers or on a
+#  different host.
 #  
 #  See `hub_connect_ip` for cases where the bind and connect address should
 #  differ, or `hub_bind_url` for setting the full bind URL.
-c.JupyterHub.hub_ip = os.environ['HUB_IP']
+#  Default: '127.0.0.1'
+c.JupyterHub.hub_ip = '0.0.0.0'
 
 ## List of service specification dictionaries.
 #  
@@ -95,11 +115,16 @@ c.JupyterHub.hub_ip = os.environ['HUB_IP']
 #              'environment':
 #          }
 #      ]
+#  Default: []
 c.JupyterHub.services = [
     {
-        'name': 'cull_idle',
+        'name': 'idle-culler',
         'admin': True,
-        'command': 'python /srv/jupyterhub/cull_idle_servers.py --timeout=3600'.split()
+        'command': [
+            sys.executable,
+            '-m', 'jupyterhub_idle_culler',
+            '--timeout=3600'
+        ],
     }
 ]
 
@@ -118,6 +143,7 @@ c.JupyterHub.services = [
 #    - default: jupyterhub.spawner.LocalProcessSpawner
 #    - localprocess: jupyterhub.spawner.LocalProcessSpawner
 #    - simple: jupyterhub.spawner.SimpleLocalProcessSpawner
+#  Default: 'jupyterhub.spawner.LocalProcessSpawner'
 c.JupyterHub.spawner_class = 'dockerspawner.DockerSpawner'
 
 #------------------------------------------------------------------------------
@@ -137,7 +163,15 @@ c.JupyterHub.spawner_class = 'dockerspawner.DockerSpawner'
 #    notebook instead of a directory.
 #  - You can set this to `/lab` to have JupyterLab start by default, rather
 #    than Jupyter Notebook.
+#  Default: ''
 c.Spawner.default_url = '/lab'
+
+## Timeout (in seconds) before giving up on a spawned HTTP server
+#  
+#  Once a server has successfully been spawned, this is the amount of time we
+#  wait before assuming that the server is unable to accept connections.
+#  Default: 30
+# c.Spawner.http_timeout = 30
 
 ## Path to the notebook directory for the single-user server.
 #  
@@ -150,8 +184,18 @@ c.Spawner.default_url = '/lab'
 #  
 #  Note that this does *not* prevent users from accessing files outside of this
 #  path! They can do so with many other means.
+#  Default: ''
 notebook_dir = os.environ.get('DOCKER_NOTEBOOK_DIR') or '/home/jovyan'
 c.Spawner.notebook_dir = notebook_dir
+
+## Timeout (in seconds) before giving up on starting of single-user server.
+#  
+#  This is the timeout for start to return, not the timeout for the server to
+#  respond. Callers of spawner.start will assume that startup has failed if it
+#  takes longer than this. start should return when the server process is started
+#  and its location is known.
+#  Default: 60
+# c.Spawner.start_timeout = 60
 
 #------------------------------------------------------------------------------
 # DockerSpawner(LoggingConfigurable) configuration
@@ -168,6 +212,7 @@ c.Spawner.notebook_dir = notebook_dir
 #  
 #  Any of the jupyter docker-stacks should work without additional config, as
 #  long as the version of jupyterhub in the image is compatible.
+#  Default: 'jupyterhub/singleuser:1.3'
 c.Spawner.image = os.environ['DOCKER_JUPYTERLAB_IMAGE']
 
 ## Run the containers on this docker network.
@@ -175,16 +220,19 @@ c.Spawner.image = os.environ['DOCKER_JUPYTERLAB_IMAGE']
 #  If it is an internal docker network, the Hub should be on the same network,
 #  as internal docker IP addresses will be used. For bridge networking,
 #  external ports will be bound.
+#  Default: 'bridge'
 c.Spawner.network_name = os.environ['DOCKER_NETWORK_NAME']
 
 ## Prefix for container names.
 #  
 #  See name_template for full container name for a particular user’s server.
+#  Default: 'jupyter'
 c.Spawner.prefix = 'jupyterlab'
 
 ## If True, delete containers when servers are stopped.
 #  
 #  This will destroy any data in the container not stored in mounted volumes.
+#  Default: False
 c.Spawner.remove = True
 
 ## Map from host file/directory to container (guest) file/directory mount point
@@ -199,12 +247,12 @@ c.Spawner.remove = True
 #  If format_volume_name is not set, default_format_volume_name is used for
 #  naming volumes. In this case, if you use {username} in either the host or
 #  guest file/directory path, it will be replaced with the current user’s name.
+#  Default: {}
 c.Spawner.volumes = { 'jupyterhub-user-{username}': notebook_dir }
 
 #------------------------------------------------------------------------------
 # Authenticator(LoggingConfigurable) configuration
 #------------------------------------------------------------------------------
-
 ## Base class for implementing an authentication provider for JupyterHub
 
 ## Set of users that will have admin rights on this JupyterHub.
@@ -219,4 +267,5 @@ c.Spawner.volumes = { 'jupyterhub-user-{username}': notebook_dir }
 #  Admin access should be treated the same way root access is.
 #  
 #  Defaults to an empty set, in which case no user has admin access.
-#c.Authenticator.admin_users = set()
+#  Default: set()
+# c.Authenticator.admin_users = set()

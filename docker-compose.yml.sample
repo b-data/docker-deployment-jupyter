@@ -1,4 +1,4 @@
-version: '3'
+version: '3.8'
 
 services:
   jupyterhub:
@@ -6,11 +6,10 @@ services:
     image: jupyterhub_img
     restart: always
     networks:
-      - default
+      - jupyter
       - webproxy
     volumes:
       - jupyterhub-data:/srv/jupyterhub
-      - ./jupyterhub/jupyterhub_config.py:/srv/jupyterhub/jupyterhub_config.py
       - /var/run/docker.sock:/var/run/docker.sock
     environment:
       - DOCKER_JUPYTERLAB_IMAGE=${DOCKER_JUPYTERLAB_IMAGE}
@@ -18,7 +17,6 @@ services:
       - GITLAB_URL=https://gitlab.${GL_DOMAIN}
       - GITLAB_CLIENT_ID=${JH_GITLAB_APPLICATION_ID}
       - GITLAB_CLIENT_SECRET=${JH_GITLAB_SECRET}
-      - HUB_IP=jupyterhub
       - POSTGRES_HOST=jupyterhub-postgres
     env_file:
       - db.env
@@ -38,15 +36,16 @@ services:
   jupyterhub-postgres:
     image: postgres:alpine
     restart: always
+    networks:
+      - jupyter
     env_file:
       - db.env
     volumes:
       - jupyterhub-postgres-data:/var/lib/postgresql/data
 
 networks:
-  default:
-    external:
-      name: jupyter
+  jupyter:
+    external: true
   webproxy:
     external: true
 
