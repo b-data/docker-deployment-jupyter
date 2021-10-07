@@ -1,4 +1,4 @@
 sources: 
   - file_name: jupyterhub_config.py
     command: "jupyterhub --generate-config"
-    date: 2021-03-16
+    date: 2021-10-07

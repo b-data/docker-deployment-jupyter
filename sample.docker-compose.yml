@@ -25,6 +25,7 @@ services:
     labels:
       - traefik.enable=true
       - traefik.docker.network=webproxy
+      - traefik.http.services.jupyterhub.loadbalancer.server.port=8000
       - traefik.http.routers.jupyterhub.entrypoints=web
       - traefik.http.routers.jupyterhub.rule=Host(`jupyter.${JH_DOMAIN}`)
       - traefik.http.routers.jupyterhub.middlewares=http2https@file

@@ -150,6 +150,23 @@ c.JupyterHub.spawner_class = 'dockerspawner.DockerSpawner'
 # Spawner(LoggingConfigurable) configuration
 #------------------------------------------------------------------------------
 
+## Override escaping with any callable of the form escape(str)->str
+#  
+#  This is used to ensure docker-safe container names, etc.
+#  
+#  The default escaping should ensure safety and validity,
+#  but can produce cumbersome strings in cases.
+#  
+#  Set c.DockerSpawner.escape = 'legacy' to preserve the earlier, unsafe behavior
+#  if it worked for you.
+#  
+#  .. versionadded:: 12.0
+#  
+#  .. versionchanged:: 12.0
+#      Escaping has changed in 12.0 to ensure safety,
+#      but existing deployments will get different container and volume names.
+c.Spawner.escape = 'legacy'
+
 ## The URL the single-user server should start in.
 #  
 #  `{username}` will be expanded to the user's username
