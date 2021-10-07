@@ -30,25 +30,25 @@ in docker containers using docker-compose.
 *  Use of environment files for variable substitution in the Compose file.
 
 The following extensions are pre-installed for **code-server**:
-*  [.gitignore Generator](https://marketplace.visualstudio.com/items?itemName=piotrpalarz.vscode-gitignore-generator)
-*  [GitLens — Git supercharged](https://marketplace.visualstudio.com/items?itemName=eamodio.gitlens)
-*  [Excel Viewer](https://marketplace.visualstudio.com/items?itemName=GrapeCity.gc-excelviewer)
-*  [LaTeX Workshop](https://marketplace.visualstudio.com/items?itemName=James-Yu.latex-workshop)
-*  [Path Intellisense](https://marketplace.visualstudio.com/items?itemName=christian-kohler.path-intellisense)
-*  [Project Manager](https://marketplace.visualstudio.com/items?itemName=alefragnani.project-manager)
-*  [Python](https://marketplace.visualstudio.com/items?itemName=ms-python.python)
-*  [R](https://marketplace.visualstudio.com/items?itemName=Ikuyadeu.r)
-*  [R LSP Client](https://marketplace.visualstudio.com/items?itemName=REditorSupport.r-lsp)
-*  [YAML](https://marketplace.visualstudio.com/items?itemName=redhat.vscode-yaml)
+*  [.gitignore Generator](https://github.com/piotrpalarz/vscode-gitignore-generator)
+*  [GitLens — Git supercharged](https://open-vsx.org/extension/eamodio/gitlens)
+*  [Excel Viewer](https://open-vsx.org/extension/GrapeCity/gc-excelviewer)
+*  [Jupyter](https://open-vsx.org/extension/ms-toolsai/jupyter)
+*  [LaTeX Workshop](https://open-vsx.org/extension/James-Yu/latex-workshop)
+*  [Path Intellisense](https://open-vsx.org/extension/christian-kohler/path-intellisense)
+*  [Project Manager](https://open-vsx.org/extension/alefragnani/project-manager)
+*  [Python](https://open-vsx.org/extension/ms-python/python)
+*  [R](https://open-vsx.org/extension/Ikuyadeu/r)
+*  [YAML](https://open-vsx.org/extension/redhat/vscode-yaml)
 
 **About**
 
 *  **JupyterHub**
     *  Homepage: https://jupyter.org/hub
-    *  Documentation: https://jupyterhub.readthedocs.io/en/1.3.0/
+    *  Documentation: https://jupyterhub.readthedocs.io/en/stable/
 *  **JupyterLab**
     *  Homepage: https://jupyter.org
-    *  Documentation: https://jupyterlab.readthedocs.io/en/3.0.x/
+    *  Documentation: https://jupyterlab.readthedocs.io/en/stable/
 *  **code-server**
     *  Homepage: https://github.com/cdr/code-server
     *  Documentation: https://code.visualstudio.com/Docs
@@ -84,14 +84,17 @@ The following is required:
     ```bash
     docker network create jupyter
     ```
-1.  Make a copy of '[.env.sample](.env.sample)' and rename it to '.env'.
+1.  Make a copy of all `sample.` files and folders:  
+    ```bash
+    for file in sample.*; do cp -r "$file" "${file#sample.}"; done;
+    ```
 1.  Update environment variables `JH_DOMAIN`, `GL_DOMAIN` and
     `JH_CERTRESOLVER_NAME` in '.env':
     *  Replace `mydomain.com` with your **own domain** that serves the
        **subdomain**.
     *  Replace `mydomain-com` with a valid certificate resolvers name of
        Træfik.
-1.  [Add JupyterHub as an OAuth application](https://docs.gitlab.com/ce/integration/oauth_provider.html#oauth-applications-in-the-admin-area)
+1.  [Add JupyterHub as an OAuth application](https://docs.gitlab.com/ee/integration/oauth_provider.html#oauth-applications-in-the-admin-area)
     in GitLab CE:  
       ```
       Name: JupyterHub
@@ -105,21 +108,16 @@ The following is required:
     *  Click "Submit" and copy "Application ID" and "Secret"
 1.  Update environment variables `JH_GITLAB_APPLICATION_ID` and
     `JH_GITLAB_SECRET` in '.env' accordingly.
-1.  Make a copy of '[db.env.sample](db.env.sample)' and rename it to 'db.env'.
 1.  Update the following environment variable in 'db.env':
     *  `POSTGRES_PASSWORD`: Superuser password for PostgreSQL (default:
        `password`)
-1.  Make a copy of folder '[jupyterhub.sample](jupyterhub.sample)' and rename
-    it to 'jupyterhub'.
-1.  Make a copy of '[docker-compose.yml.sample](docker-compose.yml.sample)' and
-    rename it to 'docker-compose.yml'.
 1.  Start the container in detached mode:  
     ```bash
     docker-compose up -d
     ```
 
 The image for service jupyterhub will be built now, because it does not exist
-yet. This might take a while...  
+yet. This souldn't take long...  
 → To rebuild the image you must use `docker-compose build` or
 `docker-compose up --build`.
 
@@ -132,13 +130,13 @@ fine.
 
 ### JupyterHub
 
-*  [Authenticators](https://jupyterhub.readthedocs.io/en/1.3.0/reference/authenticators.html)
-*  [DockerSpawner API](https://jupyterhub-dockerspawner.readthedocs.io/en/latest/api/index.html)
-*  [The Hub's Database](https://jupyterhub.readthedocs.io/en/1.3.0/reference/database.html)
+*  [Authenticators](https://jupyterhub.readthedocs.io/en/stable/reference/authenticators.html)
+*  [DockerSpawner API](https://jupyterhub-dockerspawner.readthedocs.io/en/stable/api/index.html)
+*  [The Hub's Database](https://jupyterhub.readthedocs.io/en/stable/reference/database.html)
 
 ### JupyterLab
 
-*  [ServerProxy](https://jupyter-server-proxy.readthedocs.io/en/latest/)
+*  [ServerProxy](https://jupyter-server-proxy.readthedocs.io/en/stable/)
 
 ## License
 

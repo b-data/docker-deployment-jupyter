@@ -110,6 +110,29 @@
 #              e.g. `c.JupyterHub.authenticator_class = 'pam'`
 #  
 #  Currently installed: 
+#    - auth0: oauthenticator.auth0.Auth0OAuthenticator
+#    - azuread: oauthenticator.azuread.AzureAdOAuthenticator
+#    - bitbucket: oauthenticator.bitbucket.BitbucketOAuthenticator
+#    - cilogon: oauthenticator.cilogon.CILogonOAuthenticator
+#    - generic-oauth: oauthenticator.generic.GenericOAuthenticator
+#    - github: oauthenticator.github.GitHubOAuthenticator
+#    - gitlab: oauthenticator.gitlab.GitLabOAuthenticator
+#    - globus: oauthenticator.globus.GlobusOAuthenticator
+#    - google: oauthenticator.google.GoogleOAuthenticator
+#    - local-auth0: oauthenticator.auth0.LocalAuth0OAuthenticator
+#    - local-azuread: oauthenticator.azuread.LocalAzureAdOAuthenticator
+#    - local-bitbucket: oauthenticator.bitbucket.LocalBitbucketOAuthenticator
+#    - local-cilogon: oauthenticator.cilogon.LocalCILogonOAuthenticator
+#    - local-generic-oauth: oauthenticator.generic.LocalGenericOAuthenticator
+#    - local-github: oauthenticator.github.LocalGitHubOAuthenticator
+#    - local-gitlab: oauthenticator.gitlab.LocalGitLabOAuthenticator
+#    - local-globus: oauthenticator.globus.LocalGlobusOAuthenticator
+#    - local-google: oauthenticator.google.LocalGoogleOAuthenticator
+#    - local-okpy: oauthenticator.okpy.LocalOkpyOAuthenticator
+#    - local-openshift: oauthenticator.openshift.LocalOpenShiftOAuthenticator
+#    - mediawiki: oauthenticator.mediawiki.MWOAuthenticator
+#    - okpy: oauthenticator.okpy.OkpyOAuthenticator
+#    - openshift: oauthenticator.openshift.OpenShiftOAuthenticator
 #    - default: jupyterhub.auth.PAMAuthenticator
 #    - dummy: jupyterhub.auth.DummyAuthenticator
 #    - pam: jupyterhub.auth.PAMAuthenticator
@@ -193,8 +216,8 @@
 #  Loaded from the JPY_COOKIE_SECRET env variable by default.
 #  
 #  Should be exactly 256 bits (32 bytes).
-#  Default: b''
-# c.JupyterHub.cookie_secret = b''
+#  Default: traitlets.Undefined
+# c.JupyterHub.cookie_secret = traitlets.Undefined
 
 ## File in which to store the cookie secret.
 #  Default: 'jupyterhub_cookie_secret'
@@ -367,6 +390,25 @@
 #  Default: 8081
 # c.JupyterHub.hub_port = 8081
 
+## The routing prefix for the Hub itself.
+#  
+#  Override to send only a subset of traffic to the Hub. Default is to use the
+#  Hub as the default route for all requests.
+#  
+#  This is necessary for normal jupyterhub operation, as the Hub must receive
+#  requests for e.g. `/user/:name` when the user's server is not running.
+#  
+#  However, some deployments using only the JupyterHub API may want to handle
+#  these events themselves, in which case they can register their own default
+#  target with the proxy and set e.g. `hub_routespec = /hub/` to serve only the
+#  hub's own pages, or even `/hub/api/` for api-only operation.
+#  
+#  Note: hub_routespec must include the base_url, if any.
+#  
+#  .. versionadded:: 1.4
+#  Default: '/'
+# c.JupyterHub.hub_routespec = '/'
+
 ## Trigger implicit spawns after this many seconds.
 #  
 #  When a user visits a URL for a server that's not running, they are shown a
@@ -467,6 +509,30 @@
 #  Default: 0
 # c.JupyterHub.named_server_limit_per_user = 0
 
+## Expiry (in seconds) of OAuth access tokens.
+#  
+#  The default is to expire when the cookie storing them expires, according to
+#  `cookie_max_age_days` config.
+#  
+#  These are the tokens stored in cookies when you visit a single-user server or
+#  service. When they expire, you must re-authenticate with the Hub, even if your
+#  Hub authentication is still valid. If your Hub authentication is valid,
+#  logging in may be a transparent redirect as you refresh the page.
+#  
+#  This does not affect JupyterHub API tokens in general, which do not expire by
+#  default. Only tokens issued during the oauth flow accessing services and
+#  single-user servers are affected.
+#  
+#  .. versionadded:: 1.4
+#      OAuth token expires_in was not previously configurable.
+#  .. versionchanged:: 1.4
+#      Default now uses cookie_max_age_days so that oauth tokens
+#      which are generally stored in cookies,
+#      expire when the cookies storing them expire.
+#      Previously, it was one hour.
+#  Default: 0
+# c.JupyterHub.oauth_token_expires_in = 0
+
 ## File to write PID Useful for daemonizing JupyterHub.
 #  Default: ''
 # c.JupyterHub.pid_file = ''
@@ -493,9 +559,9 @@
 #  Default: ''
 # c.JupyterHub.proxy_auth_token = ''
 
-## Interval (in seconds) at which to check if the proxy is running.
-#  Default: 30
-# c.JupyterHub.proxy_check_interval = 30
+## DEPRECATED since version 0.8: Use ConfigurableHTTPProxy.check_running_interval
+#  Default: 5
+# c.JupyterHub.proxy_check_interval = 5
 
 ## The class to use for configuring the JupyterHub proxy.
 #  
@@ -585,6 +651,9 @@
 #              e.g. `c.JupyterHub.spawner_class = 'localprocess'`
 #  
 #  Currently installed: 
+#    - docker: dockerspawner.DockerSpawner
+#    - docker-swarm: dockerspawner.SwarmSpawner
+#    - docker-system-user: dockerspawner.SystemUserSpawner
 #    - default: jupyterhub.spawner.LocalProcessSpawner
 #    - localprocess: jupyterhub.spawner.LocalProcessSpawner
 #    - simple: jupyterhub.spawner.SimpleLocalProcessSpawner
@@ -861,6 +930,15 @@
 #  wait before assuming that the server is unable to accept connections.
 #  Default: 30
 # c.Spawner.http_timeout = 30
+
+## The URL the single-user server should connect to the Hub.
+#  
+#  If the Hub URL set in your JupyterHub config is not reachable from spawned
+#  notebooks, you can set differnt URL by this config.
+#  
+#  Is None if you don't need to change the URL.
+#  Default: None
+# c.Spawner.hub_connect_url = None
 
 ## The IP address (or hostname) the single-user server should listen on.
 #  
