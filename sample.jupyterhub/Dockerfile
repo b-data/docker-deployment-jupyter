@@ -1,7 +1,11 @@
 FROM registry.gitlab.b-data.ch/jupyterhub/jupyterhub-onbuild:1.4
 
-RUN pip install --no-cache-dir \
+RUN apt-get update \
+  && apt-get upgrade -y \
+  && pip install --no-cache-dir \
     psycopg2-binary \
     dockerspawner \
     jupyterhub-idle-culler \
-    oauthenticator
+    oauthenticator \
+  # Clean up
+  && rm -rf /var/lib/apt/lists/*

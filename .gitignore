@@ -91,4 +91,8 @@ $RECYCLE.BIN/
 .env
 db.env
 docker-compose.yml
+
+custom/**
 jupyterhub/
+
+!.keep
