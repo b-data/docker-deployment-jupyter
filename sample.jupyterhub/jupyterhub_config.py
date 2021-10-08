@@ -165,7 +165,7 @@ c.JupyterHub.spawner_class = 'dockerspawner.DockerSpawner'
 #  .. versionchanged:: 12.0
 #      Escaping has changed in 12.0 to ensure safety,
 #      but existing deployments will get different container and volume names.
-c.Spawner.escape = 'legacy'
+
 
 ## The URL the single-user server should start in.
 #  
