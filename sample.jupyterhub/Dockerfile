@@ -1,7 +1,9 @@
 FROM registry.gitlab.b-data.ch/jupyterhub/jupyterhub-onbuild:1.4
 
 RUN apt-get update \
-  && apt-get upgrade -y \
+  && apt-get install -y \
+    ca-certificates \
+    openssl \
   && pip install --no-cache-dir \
     psycopg2-binary \
     dockerspawner \
