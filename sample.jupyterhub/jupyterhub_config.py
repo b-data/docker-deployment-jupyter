@@ -128,6 +128,10 @@ c.JupyterHub.services = [
     }
 ]
 
+## Shuts down all user servers on logout
+#  Default: False
+# c.JupyterHub.shutdown_on_logout = False
+
 ## The class to use for spawning single-user servers.
 #  
 #          Should be a subclass of :class:`jupyterhub.spawner.Spawner`.
@@ -182,6 +186,31 @@ c.JupyterHub.spawner_class = 'dockerspawner.DockerSpawner'
 #    than Jupyter Notebook.
 #  Default: ''
 c.Spawner.default_url = '/lab'
+
+## Extra environment variables to set for the single-user server's process.
+#  
+#  Environment variables that end up in the single-user server's process come from 3 sources:
+#    - This `environment` configurable
+#    - The JupyterHub process' environment variables that are listed in `env_keep`
+#    - Variables to establish contact between the single-user notebook and the hub (such as JUPYTERHUB_API_TOKEN)
+#  
+#  The `environment` configurable should be set by JupyterHub administrators to
+#  add installation specific environment variables. It is a dict where the key is
+#  the name of the environment variable, and the value can be a string or a
+#  callable. If it is a callable, it will be called with one parameter (the
+#  spawner instance), and should return a string fairly quickly (no blocking
+#  operations please!).
+#  
+#  Note that the spawner class' interface is not guaranteed to be exactly same
+#  across upgrades, so if you are using the callable take care to verify it
+#  continues to work after upgrades!
+#  
+#  .. versionchanged:: 1.2
+#      environment from this configuration has highest priority,
+#      allowing override of 'default' env variables,
+#      such as JUPYTERHUB_API_URL.
+#  Default: {}
+# c.Spawner.environment = {}
 
 ## Timeout (in seconds) before giving up on a spawned HTTP server
 #  
