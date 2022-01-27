@@ -63,7 +63,7 @@ c.JupyterHub.authenticator_class = GitLabOAuthenticator
 
 ## url for the database. e.g. `sqlite:///jupyterhub.sqlite`
 #  Default: 'sqlite:///jupyterhub.sqlite'
-c.JupyterHub.db_url = 'postgresql://postgres:{password}@{host}/{db}'.format(
+c.JupyterHub.db_url = 'postgresql://postgres:{password}@{host}:5432/{db}'.format(
     host = os.environ['POSTGRES_HOST'],
     password = os.environ['POSTGRES_PASSWORD'],
     db = os.environ['POSTGRES_DB']
