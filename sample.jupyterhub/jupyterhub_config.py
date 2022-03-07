@@ -69,22 +69,6 @@ c.JupyterHub.db_url = 'postgresql://postgres:{password}@{host}:5432/{db}'.format
     db = os.environ['POSTGRES_DB']
 )
 
-## The ip or hostname for proxies and spawners to use for connecting to the Hub.
-#  
-#  Use when the bind address (`hub_ip`) is 0.0.0.0, :: or otherwise different
-#  from the connect address.
-#  
-#  Default: when `hub_ip` is 0.0.0.0 or ::, use `socket.gethostname()`, otherwise
-#  use `hub_ip`.
-#  
-#  Note: Some spawners or proxy implementations might not support hostnames.
-#  Check your spawner or proxy documentation to see if they have extra
-#  requirements.
-#  
-#  .. versionadded:: 0.8
-#  Default: ''
-c.JupyterHub.hub_connect_ip = 'jupyterhub'
-
 ## The ip address for the Hub process to *bind* to.
 #  
 #  By default, the hub listens on localhost only. This address must be accessible
@@ -95,7 +79,7 @@ c.JupyterHub.hub_connect_ip = 'jupyterhub'
 #  See `hub_connect_ip` for cases where the bind and connect address should
 #  differ, or `hub_bind_url` for setting the full bind URL.
 #  Default: '127.0.0.1'
-c.JupyterHub.hub_ip = '0.0.0.0'
+c.JupyterHub.hub_ip = ''
 
 ## List of service specification dictionaries.
 #  
