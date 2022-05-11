@@ -14,6 +14,10 @@ import sys
 #  Default: False
 # c.JupyterHub.admin_access = False
 
+## Allow named single-user servers per user
+#  Default: False
+# c.JupyterHub.allow_named_servers = False
+
 ## Class for authenticating users.
 #  
 #          This should be a subclass of :class:`jupyterhub.auth.Authenticator`
@@ -80,6 +84,15 @@ c.JupyterHub.db_url = 'postgresql://postgres:{password}@{host}:5432/{db}'.format
 #  differ, or `hub_bind_url` for setting the full bind URL.
 #  Default: '127.0.0.1'
 c.JupyterHub.hub_ip = ''
+
+## Maximum number of concurrent named servers that can be created by a user at a
+#  time.
+#  
+#  Setting this can limit the total resources a user can consume.
+#  
+#  If set to 0, no limit is enforced.
+#  Default: 0
+# c.JupyterHub.named_server_limit_per_user = 0
 
 ## List of service specification dictionaries.
 #  

@@ -1,4 +1,4 @@
-version: '3.8'
+version: '3.9'
 
 services:
   jupyterhub:
@@ -17,6 +17,7 @@ services:
       - GITLAB_URL=https://gitlab.${GL_DOMAIN}
       - GITLAB_CLIENT_ID=${JH_GITLAB_APPLICATION_ID}
       - GITLAB_CLIENT_SECRET=${JH_GITLAB_SECRET}
+      - JPY_COOKIE_SECRET=${JH_COOKIE_SECRET}
       - POSTGRES_HOST=jupyterhub-postgres
     env_file:
       - db.env
