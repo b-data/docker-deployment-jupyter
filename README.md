@@ -33,6 +33,7 @@ in docker containers using docker-compose.
 
 The following extensions are pre-installed for **code-server**:
 *  [.gitignore Generator](https://github.com/piotrpalarz/vscode-gitignore-generator)
+*  [Git Graph](https://open-vsx.org/extension/mhutchie/git-graph)
 *  [GitLens — Git supercharged](https://open-vsx.org/extension/eamodio/gitlens)
 *  [Excel Viewer](https://open-vsx.org/extension/GrapeCity/gc-excelviewer)
 *  [Jupyter](https://open-vsx.org/extension/ms-toolsai/jupyter)
@@ -96,6 +97,11 @@ The following is required:
        **subdomain**.
     *  Replace `mydomain-com` with a valid certificate resolvers name of
        Træfik.
+1.  Set environment variable `JH_COOKIE_SECRET` in '.env':  
+    Generate random cookie secret:  
+    ```bash
+    openssl rand -hex 32
+    ```
 1.  [Add JupyterHub as an OAuth application](https://docs.gitlab.com/ee/integration/oauth_provider.html#oauth-applications-in-the-admin-area)
     in GitLab CE:  
       ```
