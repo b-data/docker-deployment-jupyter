@@ -1,4 +1,4 @@
-FROM registry.gitlab.b-data.ch/jupyterhub/jupyterhub-onbuild:2.2
+FROM registry.gitlab.b-data.ch/jupyterhub/jupyterhub-onbuild:2.3
 
 RUN apt-get update \
   && apt-get install -y \
