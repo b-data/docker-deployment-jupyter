@@ -20,6 +20,7 @@ in docker containers using docker-compose.
     *  **Git**: A distributed version-control system for tracking changes in
        source code.
     *  **Pandoc**: A universal markup converter.
+    *  **Quarto**: An open-source scientific and technical publishing system built on Pandoc. (amd64 only)
     *  **R**: A language and environment for statistical computing and
        graphics.
     *  **radian**: An alternative console for R with multiline editing and rich
@@ -34,6 +35,7 @@ in docker containers using docker-compose.
 The following extensions are pre-installed for **code-server**:
 *  [.gitignore Generator](https://github.com/piotrpalarz/vscode-gitignore-generator)
 *  [Git Graph](https://open-vsx.org/extension/mhutchie/git-graph)
+*  [GitLab Workflow](https://open-vsx.org/extension/GitLab/gitlab-workflow)
 *  [GitLens — Git supercharged](https://open-vsx.org/extension/eamodio/gitlens)
 *  [Excel Viewer](https://open-vsx.org/extension/GrapeCity/gc-excelviewer)
 *  [Jupyter](https://open-vsx.org/extension/ms-toolsai/jupyter)
@@ -41,6 +43,7 @@ The following extensions are pre-installed for **code-server**:
 *  [Path Intellisense](https://open-vsx.org/extension/christian-kohler/path-intellisense)
 *  [Project Manager](https://open-vsx.org/extension/alefragnani/project-manager)
 *  [Python](https://open-vsx.org/extension/ms-python/python)
+*  [Quarto](https://open-vsx.org/extension/quarto/quarto) (amd64 only)
 *  [R](https://open-vsx.org/extension/Ikuyadeu/r)
 *  [YAML](https://open-vsx.org/extension/redhat/vscode-yaml)
 
