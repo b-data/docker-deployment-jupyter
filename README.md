@@ -5,7 +5,7 @@
 [This project](https://gitlab.com/b-data/docker/deployments/jupyter) serves as
 a template to run [jupyterhub](https://gitlab.b-data.ch/jupyterhub/jupyterhub/container_registry)
 with [jupyterlab/r/verse](https://gitlab.b-data.ch/jupyterlab/r/verse/container_registry)
-in docker containers using docker-compose.
+in docker containers using docker compose.
 
 **Features**
 
@@ -124,13 +124,13 @@ The following is required:
        `password`)
 1.  Start the container in detached mode:  
     ```bash
-    docker-compose up -d
+    docker compose up -d
     ```
 
 The image for service jupyterhub will be built now, because it does not exist
 yet. This souldn't take long...  
-→ To rebuild the image you must use `docker-compose build` or
-`docker-compose up --build`.
+→ To rebuild the image you must use `docker compose build` or
+`docker compose up --build`.
 
 ### Test
 
