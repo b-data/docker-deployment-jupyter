@@ -151,7 +151,7 @@ fine.
 
 ## License
 
-[MIT License](LICENSE), Copyright (c) 2020 b-data GmbH
+[MIT](LICENSE) © 2020 b-data GmbH
 
 ### Third party code
 
