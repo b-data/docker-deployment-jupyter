@@ -149,6 +149,14 @@ fine.
 
 *  [ServerProxy](https://jupyter-server-proxy.readthedocs.io/en/stable/)
 
+## Contributing
+
+PRs accepted.
+
+This project follows the
+[Contributor Covenant](https://www.contributor-covenant.org)
+[Code of Conduct](CODE_OF_CONDUCT.md).
+
 ## License
 
 [MIT](LICENSE) © 2020 b-data GmbH
