@@ -64,6 +64,9 @@ The following extensions are pre-installed for **code-server**:
 *  **Pandoc**
     *  Homepage: https://pandoc.org
     *  Manual: https://pandoc.org/MANUAL.html
+*  **Quarto**
+    *  Homepage: https://quarto.org
+    *  Reference: https://quarto.org/docs/reference/
 *  **R**
     *  Homepage: https://www.r-project.org
     *  Manuals: https://cran.r-project.org/manuals.html
