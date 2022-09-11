@@ -1,4 +1,4 @@
-<a href="https://liberapay.com/benz0li/donate"><img src="https://liberapay.com/assets/widgets/donate.svg" alt="Donate using Liberapay" height="20"></a> <a href="https://benz0li.b-data.io/donate?project=2"><img src="https://benz0li.b-data.io/donate/static/donate-with-fosspay.png" alt="Donate with fosspay"></a>
+[![minimal-readme compliant](https://img.shields.io/badge/readme%20style-minimal-brightgreen.svg)](https://github.com/RichardLitt/standard-readme/blob/master/example-readmes/minimal-readme.md) [![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active) <a href="https://liberapay.com/benz0li/donate"><img src="https://liberapay.com/assets/widgets/donate.svg" alt="Donate using Liberapay" height="20"></a> <a href="https://benz0li.b-data.io/donate?project=2"><img src="https://benz0li.b-data.io/donate/static/donate-with-fosspay.png" alt="Donate with fosspay"></a>
 
 # Jupyter
 
@@ -78,16 +78,31 @@ The following extensions are pre-installed for **code-server**:
     *  Homepage: http://zsh.sourceforge.net
     *  Documentation: http://zsh.sourceforge.net/Doc/Release/zsh_toc.html
 
+## Table of Contents
+
+*  [Prerequisites](#prerequisites)
+*  [Install](#install)
+*  [Usage](#usage)
+*  [Further reading](#further-reading)
+*  [Contributing](#contributing)
+*  [License](#license)
+
 ## Prerequisites
 
 The following is required:
 
-*  [Docker Deployments](https://gitlab.com/b-data/docker/deployments) of
-    *  [Træfik](https://gitlab.com/b-data/docker/deployments/traefik)
-    *  [GitLab CE](https://gitlab.com/b-data/docker/deployments/gitlab-ce)
 *  A DNS record for **subdomain** jupyter pointing to this host.
 
-## Setup
+## Install
+
+This project depends on the following
+[Docker Deployments](https://gitlab.com/b-data/docker/deployments):
+
+*  [Træfik](https://gitlab.com/b-data/docker/deployments/traefik): TLS termination,
+   reverse proxy
+*  [GitLab CE](https://gitlab.com/b-data/docker/deployments/gitlab-ce): Authentication
+
+## Usage
 
 1.  Create an external docker network named "jupyter":  
     ```bash
