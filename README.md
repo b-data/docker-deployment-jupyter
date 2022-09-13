@@ -19,8 +19,9 @@ in docker containers using docker compose.
        branding/telemetry/licensing.
     *  **Git**: A distributed version-control system for tracking changes in
        source code.
+    *  **Git LFS**: A Git extension for versioning large files.
     *  **Pandoc**: A universal markup converter.
-    *  **Quarto**: An open-source scientific and technical publishing system built on Pandoc. (amd64 only)
+    *  **Quarto**: A scientific and technical publishing system built on Pandoc. (amd64 only)
     *  **R**: A language and environment for statistical computing and
        graphics.
     *  **radian**: An alternative console for R with multiline editing and rich
@@ -61,6 +62,9 @@ The following extensions are pre-installed for **code-server**:
 *  **Git**
     *  Homepage: https://git-scm.com
     *  Documentation: https://git-scm.com/docs
+*  **Git LFS**
+    *  Homepage: https://git-lfs.github.com
+    *  Documentation: https://github.com/git-lfs/git-lfs/tree/main/docs
 *  **Pandoc**
     *  Homepage: https://pandoc.org
     *  Manual: https://pandoc.org/MANUAL.html
@@ -154,6 +158,15 @@ yet. This souldn't take long...
 
 Wait a moment and visit https://jupyter.mydomain.com to confirm everything went
 fine.
+
+### Reference deployment
+
+Check out the reference deployment at https://demo.jupyter.b-data.ch.
+
+*  [Security Analysis](https://snyk.io/test/website-scanner/?test=220913_AiDcSF_73W)
+*  [SSL Server Test](https://www.ssllabs.com/ssltest/analyze.html?d=demo.jupyter.b%2ddata.ch&hideResults=on)
+
+Hardened and customised to meet the latest web application security standards.
 
 ## Further reading
 
