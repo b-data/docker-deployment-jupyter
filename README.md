@@ -149,11 +149,6 @@ This project depends on the following
     docker compose up -d
     ```
 
-The image for service jupyterhub will be built now, because it does not exist
-yet. This souldn't take long...  
-→ To rebuild the image you must use `docker compose build` or
-`docker compose up --build`.
-
 ### Test
 
 Wait a moment and visit https://jupyter.mydomain.com to confirm everything went
