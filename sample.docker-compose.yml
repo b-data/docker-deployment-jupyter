@@ -2,14 +2,13 @@ version: '3.9'
 
 services:
   jupyterhub:
-    build: jupyterhub
-    image: jupyterhub_img
+    image: registry.gitlab.b-data.ch/jupyterhub/jupyterhub:${JH_VERSION}-oauth-docker
     restart: always
     networks:
       - jupyter
       - webproxy
     volumes:
-      - jupyterhub-data:/srv/jupyterhub
+      - ${JH_HOME:-.}/config/jupyterhub_config.py:/srv/jupyterhub/jupyterhub_config.py
       - /var/run/docker.sock:/var/run/docker.sock
     environment:
       - DOCKER_JUPYTERLAB_IMAGE=${DOCKER_JUPYTERLAB_IMAGE}
@@ -52,5 +51,4 @@ networks:
     external: true
 
 volumes:
-  jupyterhub-data:
   jupyterhub-postgres-data:

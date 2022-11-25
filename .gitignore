@@ -93,6 +93,6 @@ db.env
 docker-compose.yml
 
 custom/**
-jupyterhub/
+config/
 
 !.keep
