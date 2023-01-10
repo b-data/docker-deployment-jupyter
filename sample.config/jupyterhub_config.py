@@ -64,6 +64,9 @@ import sys
 #  Default: 'jupyterhub.auth.PAMAuthenticator'
 from oauthenticator.gitlab import GitLabOAuthenticator
 c.JupyterHub.authenticator_class = GitLabOAuthenticator
+c.GitLabOAuthenticator.oauth_callback_url = 'https://jupyter.{domain}/hub/oauth_callback'.format(
+    domain = os.environ['JH_DOMAIN']
+)
 
 ## url for the database. e.g. `sqlite:///jupyterhub.sqlite`
 #  Default: 'sqlite:///jupyterhub.sqlite'
