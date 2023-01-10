@@ -30,7 +30,8 @@ in docker containers using docker compose.
        easy-to-maintain LaTeX distribution based on TeX Live.
     *  **Zsh**: A shell designed for interactive use, although it is also a
        powerful scripting language.
-*  Pre-configured to run at a **subdomain** (jupyter) of your **own domain**.
+*  Pre-configured to run at a **subdomain** (default: jupyter) of your
+   **own domain**.
 *  Use of environment files for variable substitution in the Compose file.
 
 The following extensions are pre-installed for **code-server**:
@@ -95,7 +96,7 @@ The following extensions are pre-installed for **code-server**:
 
 The following is required:
 
-*  A DNS record for **subdomain** jupyter pointing to this host.
+*  A DNS record for **subdomain** (default: jupyter) pointing to this host.
 
 ## Install
 
@@ -134,7 +135,7 @@ This project depends on the following
       Redirect URL: https://jupyter.mydomain.com/hub/oauth_callback
       ```
       → Replace `mydomain.com` with your **own domain** that serves the
-      **subdomains**.
+      **subdomain**.
     *  Tick "Trusted"
     *  Scopes:
         *  Tick "api"

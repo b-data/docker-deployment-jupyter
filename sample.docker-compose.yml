@@ -17,6 +17,8 @@ services:
       - GITLAB_CLIENT_ID=${JH_GITLAB_APPLICATION_ID}
       - GITLAB_CLIENT_SECRET=${JH_GITLAB_SECRET}
       - JPY_COOKIE_SECRET=${JH_COOKIE_SECRET}
+      - JUPYTERHUB_DOMAIN=${JH_DOMAIN}
+      - JUPYTERHUB_SUBDOMAIN=${JH_SUBDOMAIN:-jupyter}
       - POSTGRES_HOST=jupyterhub-postgres
     env_file:
       - db.env
@@ -27,10 +29,10 @@ services:
       - traefik.docker.network=webproxy
       - traefik.http.services.jupyterhub.loadbalancer.server.port=8000
       - traefik.http.routers.jupyterhub.entrypoints=web
-      - traefik.http.routers.jupyterhub.rule=Host(`jupyter.${JH_DOMAIN}`)
+      - traefik.http.routers.jupyterhub.rule=Host(`${JH_SUBDOMAIN}.${JH_DOMAIN}`)
       - traefik.http.routers.jupyterhub.middlewares=http2https@file
       - traefik.http.routers.jupyterhub-sec.entrypoints=websecure
-      - traefik.http.routers.jupyterhub-sec.rule=Host(`jupyter.${JH_DOMAIN}`)
+      - traefik.http.routers.jupyterhub-sec.rule=Host(`${JH_SUBDOMAIN}.${JH_DOMAIN}`)
       - traefik.http.routers.jupyterhub-sec.tls.certresolver=${JH_CERTRESOLVER_NAME}
       - traefik.http.routers.jupyterhub-sec.middlewares=sts@file
 
