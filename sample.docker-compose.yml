@@ -2,7 +2,7 @@ version: '3.9'
 
 services:
   jupyterhub:
-    image: registry.gitlab.b-data.ch/jupyterhub/jupyterhub:${JH_VERSION}-oauth-docker
+    image: glcr.b-data.ch/jupyterhub/jupyterhub:${JH_VERSION}-oauth-docker
     restart: always
     networks:
       - jupyter
