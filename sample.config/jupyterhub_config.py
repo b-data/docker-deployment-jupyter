@@ -69,6 +69,18 @@ c.GitLabOAuthenticator.oauth_callback_url = 'https://{subdomain}.{domain}/hub/oa
     domain = os.environ['JUPYTERHUB_DOMAIN']
 )
 
+## Whether to shutdown single-user servers when the Hub shuts down.
+#  
+#          Disable if you want to be able to teardown the Hub while leaving the
+#  single-user servers running.
+#  
+#          If both this and cleanup_proxy are False, sending SIGINT to the Hub will
+#          only shutdown the Hub, leaving everything else running.
+#  
+#          The Hub should be able to resume from database state.
+#  Default: True
+# c.JupyterHub.cleanup_servers = True
+
 ## url for the database. e.g. `sqlite:///jupyterhub.sqlite`
 #  Default: 'sqlite:///jupyterhub.sqlite'
 c.JupyterHub.db_url = 'postgresql://postgres:{password}@{host}:5432/{db}'.format(
@@ -172,6 +184,22 @@ c.JupyterHub.spawner_class = 'dockerspawner.DockerSpawner'
 #      but existing deployments will get different container and volume names.
 
 
+## Maximum number of cpu-cores a single-user notebook server is allowed to use.
+#  
+#  If this value is set to 0.5, allows use of 50% of one CPU. If this value is
+#  set to 2, allows use of up to 2 CPUs.
+#  
+#  The single-user notebook server will never be scheduled by the kernel to use
+#  more cpu-cores than this. There is no guarantee that it can access this many
+#  cpu-cores.
+#  
+#  **This is a configuration setting. Your spawner must implement support for the
+#  limit to work.** The default spawner, `LocalProcessSpawner`, does **not**
+#  implement this support. A custom spawner **must** add support for this setting
+#  for it to be enforced.
+#  Default: None
+# c.Spawner.cpu_limit = None
+
 ## The URL the single-user server should start in.
 #  
 #  `{username}` will be expanded to the user's username
@@ -220,6 +248,25 @@ c.Spawner.default_url = '/lab'
 #  Default: 30
 # c.Spawner.http_timeout = 30
 
+## Maximum number of bytes a single-user notebook server is allowed to use.
+#  
+#  Allows the following suffixes:
+#    - K -> Kilobytes
+#    - M -> Megabytes
+#    - G -> Gigabytes
+#    - T -> Terabytes
+#  
+#  If the single user server tries to allocate more memory than this, it will
+#  fail. There is no guarantee that the single-user notebook server will be able
+#  to allocate this much memory - only that it can not allocate more than this.
+#  
+#  **This is a configuration setting. Your spawner must implement support for the
+#  limit to work.** The default spawner, `LocalProcessSpawner`, does **not**
+#  implement this support. A custom spawner **must** add support for this setting
+#  for it to be enforced.
+#  Default: None
+# c.Spawner.mem_limit = None
+
 ## Path to the notebook directory for the single-user server.
 #  
 #  The user sees a file listing of this directory when the notebook interface is
@@ -234,6 +281,25 @@ c.Spawner.default_url = '/lab'
 #  Default: ''
 notebook_dir = os.environ.get('DOCKER_NOTEBOOK_DIR') or '/home/jovyan'
 c.Spawner.notebook_dir = notebook_dir
+
+## An optional hook function that you can implement to do some bootstrapping work
+#  before the spawner starts. For example, create a directory for your user or
+#  load initial content.
+#  
+#  This can be set independent of any concrete spawner implementation.
+#  
+#  This maybe a coroutine.
+#  
+#  Example::
+#  
+#      from subprocess import check_call
+#      def my_hook(spawner):
+#          username = spawner.user.name
+#          check_call(['./examples/bootstrap-script/bootstrap.sh', username])
+#  
+#      c.Spawner.pre_spawn_hook = my_hook
+#  Default: None
+# c.Spawner.pre_spawn_hook = None
 
 ## Timeout (in seconds) before giving up on starting of single-user server.
 #  
