@@ -37,7 +37,7 @@ services:
       - traefik.http.routers.jupyterhub-sec.middlewares=sts@file
 
   jupyterhub-postgres:
-    image: postgres:alpine
+    image: postgres:16-alpine
     restart: always
     networks:
       - jupyter
