@@ -1,5 +1,7 @@
 # Configuration file for jupyterhub.
 
+c = get_config()  #noqa
+
 #------------------------------------------------------------------------------
 # Application(SingletonConfigurable) configuration
 #------------------------------------------------------------------------------
@@ -45,7 +47,7 @@
 #  
 #  .. code-block:: python
 #  
-#     c.Application.logging_configuration = {
+#     c.Application.logging_config = {
 #         'handlers': {
 #             'file': {
 #                 'class': 'logging.FileHandler',
@@ -107,9 +109,11 @@
 #  Default: 30
 # c.JupyterHub.activity_resolution = 30
 
-## Grant admin users permission to access single-user servers.
+## DEPRECATED since version 2.0.0.
 #  
-#          Users should be properly informed if this is enabled.
+#          The default admin role has full permissions, use custom RBAC scopes instead to
+#          create restricted administrator roles.
+#          https://jupyterhub.readthedocs.io/en/stable/rbac/index.html
 #  Default: False
 # c.JupyterHub.admin_access = False
 
@@ -282,6 +286,24 @@
 #  Default: 'jupyterhub_cookie_secret'
 # c.JupyterHub.cookie_secret_file = 'jupyterhub_cookie_secret'
 
+## Custom scopes to define.
+#  
+#          For use when defining custom roles,
+#          to grant users granular permissions
+#  
+#          All custom scopes must have a description,
+#          and must start with the prefix `custom:`.
+#  
+#          For example::
+#  
+#              custom_scopes = {
+#                  "custom:jupyter_server:read": {
+#                      "description": "read-only access to a single-user server",
+#                  },
+#              }
+#  Default: {}
+# c.JupyterHub.custom_scopes = {}
+
 ## The location of jupyterhub data files (e.g. /usr/local/share/jupyterhub)
 #  Default: '/usr/local/share/jupyterhub'
 # c.JupyterHub.data_files_path = '/usr/local/share/jupyterhub'
@@ -303,8 +325,13 @@
 #  Default: False
 # c.JupyterHub.debug_proxy = False
 
-## If named servers are enabled, default name of server to spawn or open, e.g. by
-#  user-redirect.
+## If named servers are enabled, default name of server to spawn or open when no
+#  server is specified, e.g. by user-redirect.
+#  
+#  Note: This has no effect if named servers are not enabled, and does _not_
+#  change the existence or behavior of the default server named `''` (the empty
+#  string). This only affects which named server is launched when no server is
+#  specified, e.g. by links to `/hub/user-redirect/lab/tree/mynotebook.ipynb`.
 #  Default: ''
 # c.JupyterHub.default_server_name = ''
 
@@ -346,11 +373,9 @@
 #  Default: {}
 # c.JupyterHub.external_ssl_authorities = {}
 
-## Register extra tornado Handlers for jupyterhub.
+## DEPRECATED.
 #  
-#  Should be of the form ``("<regex>", Handler)``
-#  
-#  The Hub prefix will be added, so `/my-page` will be served at `/hub/my-page`.
+#  If you need to register additional HTTP endpoints please use services instead.
 #  Default: []
 # c.JupyterHub.extra_handlers = []
 
@@ -543,13 +568,27 @@
 #  Default: 300
 # c.JupyterHub.last_activity_interval = 300
 
-## Dict of 'group': ['usernames'] to load at startup.
+## Dict of `{'group': {'users':['usernames'], 'properties': {}}`  to load at
+#  startup.
 #  
-#          This strictly *adds* groups and users to groups.
+#  Example::
 #  
-#          Loading one set of groups, then starting JupyterHub again with a different
-#          set will not remove users or groups from previous launches.
-#          That must be done through the API.
+#      c.JupyterHub.load_groups = {
+#          'groupname': {
+#              'users': ['usernames'],
+#              'properties': {'key': 'value'},
+#          },
+#      }
+#  
+#  This strictly *adds* groups and users to groups. Properties, if defined,
+#  replace all existing properties.
+#  
+#  Loading one set of groups, then starting JupyterHub again with a different set
+#  will not remove users or groups from previous launches. That must be done
+#  through the API.
+#  
+#  .. versionchanged:: 3.2
+#    Changed format of group from list of usernames to dict
 #  Default: {}
 # c.JupyterHub.load_groups = {}
 
@@ -601,6 +640,18 @@
 #  Setting this can limit the total resources a user can consume.
 #  
 #  If set to 0, no limit is enforced.
+#  
+#  Can be an integer or a callable/awaitable based on the handler object:
+#  
+#  ::
+#  
+#      def named_server_limit_per_user_fn(handler):
+#          user = handler.current_user
+#          if user and user.admin:
+#              return 0
+#          return 5
+#  
+#      c.JupyterHub.named_server_limit_per_user = named_server_limit_per_user_fn
 #  Default: 0
 # c.JupyterHub.named_server_limit_per_user = 0
 
@@ -1127,7 +1178,24 @@
 #  Default: ''
 # c.Spawner.notebook_dir = ''
 
+## Allowed scopes for oauth tokens issued by this server's oauth client.
+#  
+#          This sets the maximum and default scopes
+#          assigned to oauth tokens issued by a single-user server's
+#          oauth client (i.e. tokens stored in browsers after authenticating with the server),
+#          defining what actions the server can take on behalf of logged-in users.
+#  
+#          Default is an empty list, meaning minimal permissions to identify users,
+#          no actions can be taken on their behalf.
+#  
+#          If callable, will be called with the Spawner as a single argument.
+#          Callables may be async.
+#  Default: traitlets.Undefined
+# c.Spawner.oauth_client_allowed_scopes = traitlets.Undefined
+
 ## Allowed roles for oauth tokens.
+#  
+#          Deprecated in 3.0: use oauth_client_allowed_scopes
 #  
 #          This sets the maximum and default roles
 #          assigned to oauth tokens issued by a single-user server's
@@ -1240,6 +1308,21 @@
 #  Default: None
 # c.Spawner.pre_spawn_hook = None
 
+## The list of scopes to request for $JUPYTERHUB_API_TOKEN
+#  
+#          If not specified, the scopes in the `server` role will be used
+#          (unchanged from pre-4.0).
+#  
+#          If callable, will be called with the Spawner instance as its sole argument
+#          (JupyterHub user available as spawner.user).
+#  
+#          JUPYTERHUB_API_TOKEN will be assigned the _subset_ of these scopes
+#          that are held by the user (as in oauth_client_allowed_scopes).
+#  
+#          .. versionadded:: 4.0
+#  Default: traitlets.Undefined
+# c.Spawner.server_token_scopes = traitlets.Undefined
+
 ## List of SSL alt names
 #  
 #          May be set in config if all spawners should have the same value(s),
@@ -1247,7 +1330,7 @@
 #  Default: []
 # c.Spawner.ssl_alt_names = []
 
-## Whether to include DNS:localhost, IP:127.0.0.1 in alt names
+## Whether to include `DNS:localhost`, `IP:127.0.0.1` in alt names
 #  Default: True
 # c.Spawner.ssl_alt_names_include_local = True
 
@@ -1468,5 +1551,5 @@
 # c.CryptKeeper.keys = []
 
 ## The number of threads to allocate for encryption
-#  Default: 5
-# c.CryptKeeper.n_threads = 5
+#  Default: 40
+# c.CryptKeeper.n_threads = 40
