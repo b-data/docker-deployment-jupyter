@@ -1,5 +1,7 @@
 # Configuration file for jupyterhub.
 
+c = get_config()  # noqa # type: ignore
+
 import os
 import sys
 
@@ -62,12 +64,12 @@ import sys
 #    - dummy: jupyterhub.auth.DummyAuthenticator
 #    - pam: jupyterhub.auth.PAMAuthenticator
 #  Default: 'jupyterhub.auth.PAMAuthenticator'
-from oauthenticator.gitlab import GitLabOAuthenticator
-c.JupyterHub.authenticator_class = GitLabOAuthenticator
-c.GitLabOAuthenticator.oauth_callback_url = 'https://{subdomain}.{domain}/hub/oauth_callback'.format(
+c.JupyterHub.authenticator_class = "gitlab"
+c.OAuthenticator.oauth_callback_url = 'https://{subdomain}.{domain}/hub/oauth_callback'.format(
     subdomain = os.environ['JUPYTERHUB_SUBDOMAIN'],
     domain = os.environ['JUPYTERHUB_DOMAIN']
 )
+c.OAuthenticator.allow_all = True
 
 ## Whether to shutdown single-user servers when the Hub shuts down.
 #  
