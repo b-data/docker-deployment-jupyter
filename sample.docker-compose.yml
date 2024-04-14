@@ -1,5 +1,3 @@
-version: '3.9'
-
 services:
   jupyterhub:
     image: glcr.b-data.ch/jupyterhub/jupyterhub:${JH_VERSION}-oauth-docker
