@@ -23,10 +23,13 @@ Features:
     code.
   * **Git LFS**: A Git extension for versioning large files.
   * **Pandoc**: A universal markup converter.
+  * **Python**: An interpreted, object-oriented, high-level programming language
+    with dynamic semantics.
   * **Quarto**: A scientific and technical publishing system built on Pandoc.
   * **R**: A language and environment for statistical computing and graphics.
   * **radian**: An alternative console for R with multiline editing and rich
     syntax highlight.
+  * **RStudio**: An integrated development environment (IDE) for R.
   * **TinyTeX**: A lightweight, cross-platform, portable, and easy-to-maintain
     LaTeX distribution based on TeX Live.
   * **Zsh**: A shell designed for interactive use, although it is also a
@@ -75,6 +78,9 @@ About:
 * **Pandoc**
   * Homepage: <https://pandoc.org>
   * Manual: <https://pandoc.org/MANUAL.html>
+* **Python**
+  * Homepage: <https://www.python.org>
+  * Documentation: <https://docs.python.org>
 * **Quarto**
   * Homepage: <https://quarto.org>
   * Reference: <https://quarto.org/docs/reference/>
@@ -83,6 +89,9 @@ About:
   * Manuals: <https://cran.r-project.org/manuals.html>
 * **radian**
   * Homepage: <https://github.com/randy3k/radian>
+* **RStudio**
+  * Homepage: <https://posit.co/products/open-source/rstudio-server>
+  * User Guide: <https://docs.posit.co/ide/user/>
 * **TinyTeX**
   * Homepage: <https://yihui.org/tinytex/>
 * **Zsh**
