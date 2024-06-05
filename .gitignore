@@ -1,11 +1,13 @@
 *
 
 !/.github/
+!/assets/
 !/custom/
 !/references/
 !/sample.config/
 
 !/.github/FUNDING.yml
+!/assets/screenshot.png
 !/references/info.yml
 !/references/jupyterhub_config.py
 !/sample.config/jupyterhub_config.py
