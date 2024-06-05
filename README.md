@@ -9,6 +9,8 @@ template to run [jupyterhub](https://gitlab.b-data.ch/jupyterhub/jupyterhub/cont
 with [jupyterlab/r/verse](https://gitlab.b-data.ch/jupyterlab/r/verse/container_registry)
 in docker containers using docker compose.
 
+![Screenshot](assets/screenshot.png)
+
 Features:
 
 * **JupyterHub**: A multi-user Hub which spawns, manages, and proxies multiple
@@ -17,8 +19,8 @@ Features:
     other data needed for operating the Hub.
 * **JupyterLab**: A web-based interactive development environment for Jupyter
   notebooks, code, and data. The custom Docker image includes
-  * **code-server**: VS Code in the browser without MS
-    branding/telemetry/licensing.
+  * **code-server**: [`Code - OSS`](https://github.com/microsoft/vscode) in the
+    browser.
   * **Git**: A distributed version-control system for tracking changes in source
     code.
   * **Git LFS**: A Git extension for versioning large files.
@@ -41,7 +43,7 @@ Features:
 The following extensions are pre-installed for **code-server**:
 
 * [.gitignore Generator](https://github.com/piotrpalarz/vscode-gitignore-generator)
-* [EditorConfig for VS Code](https://open-vsx.org/extension/EditorConfig/EditorConfig)
+* [EditorConfig](https://open-vsx.org/extension/EditorConfig/EditorConfig)
 * [Git Graph](https://open-vsx.org/extension/mhutchie/git-graph)
 * [GitHub Pull Requests and Issues](https://open-vsx.org/extension/GitHub/vscode-pull-request-github)
 * [GitLab Workflow](https://open-vsx.org/extension/GitLab/gitlab-workflow)
@@ -68,7 +70,6 @@ About:
   * Documentation: <https://jupyterlab.readthedocs.io/en/stable/>
 * **code-server**
   * Homepage: <https://github.com/cdr/code-server>
-  * Documentation: <https://code.visualstudio.com/Docs>
 * **Git**
   * Homepage: <https://git-scm.com>
   * Documentation: <https://git-scm.com/docs>
@@ -107,6 +108,7 @@ About:
 * [Similar projects](#similar-projects)
 * [Contributing](#contributing)
 * [License](#license)
+* [Trademarks](#trademarks)
 
 ## Prerequisites
 
@@ -209,3 +211,17 @@ This project follows the
 Copyright © 2020 b-data GmbH
 
 Distributed under the terms of the [MIT License](LICENSE).
+
+## Trademarks
+
+RStudio® is a trademark of Posit Software, PBC, all rights reserved, and may be
+registered in the United States Patent and Trademark Office and in other
+countries.
+
+The use of the trademarked term RStudio® and the distribution of the RStudio
+binaries through the images hosted on b-data's GitLab Container Registry
+(`glcr.b-data.ch`) has been granted by explicit permission of Posit Software,
+PBC. Please review
+[Posit’s Trademark Guidelines](https://posit.co/about/trademark-guidelines/) and
+address inquiries about further distribution to
+[permissions@posit.co](mailto:permissions@posit.co).
