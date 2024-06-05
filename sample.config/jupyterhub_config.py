@@ -165,6 +165,13 @@ c.JupyterHub.services = [
 #  Default: 'jupyterhub.spawner.LocalProcessSpawner'
 c.JupyterHub.spawner_class = 'dockerspawner.DockerSpawner'
 
+## Upgrade the database automatically on start.
+#  
+#          Only safe if database is regularly backed up.
+#          Only SQLite databases will be backed up to a local file automatically.
+#  Default: False
+# c.JupyterHub.upgrade_db = False
+
 #------------------------------------------------------------------------------
 # Spawner(LoggingConfigurable) configuration
 #------------------------------------------------------------------------------
@@ -217,6 +224,17 @@ c.JupyterHub.spawner_class = 'dockerspawner.DockerSpawner'
 #    than Jupyter Notebook.
 #  Default: ''
 c.Spawner.default_url = '/lab'
+
+## Disable per-user configuration of single-user servers.
+#  
+#  When starting the user's single-user server, any config file found in the
+#  user's $HOME directory will be ignored.
+#  
+#  Note: a user could circumvent this if the user modifies their Python
+#  environment, such as when they have their own conda environments / virtualenvs
+#  / containers.
+#  Default: False
+c.Spawner.disable_user_config = True
 
 ## Extra environment variables to set for the single-user server's process.
 #  

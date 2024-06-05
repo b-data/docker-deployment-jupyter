@@ -48,21 +48,21 @@ c = get_config()  #noqa
 #  .. code-block:: python
 #  
 #     c.Application.logging_config = {
-#         'handlers': {
-#             'file': {
-#                 'class': 'logging.FileHandler',
-#                 'level': 'DEBUG',
-#                 'filename': '<path/to/file>',
+#         "handlers": {
+#             "file": {
+#                 "class": "logging.FileHandler",
+#                 "level": "DEBUG",
+#                 "filename": "<path/to/file>",
 #             }
 #         },
-#         'loggers': {
-#             '<application-name>': {
-#                 'level': 'DEBUG',
+#         "loggers": {
+#             "<application-name>": {
+#                 "level": "DEBUG",
 #                 # NOTE: if you don't list the default "console"
 #                 # handler here then it will be disabled
-#                 'handlers': ['console', 'file'],
+#                 "handlers": ["console", "file"],
 #             },
-#         }
+#         },
 #     }
 #  Default: {}
 # c.Application.logging_config = {}
@@ -188,10 +188,8 @@ c = get_config()  #noqa
 #    - local-gitlab: oauthenticator.gitlab.LocalGitLabOAuthenticator
 #    - local-globus: oauthenticator.globus.LocalGlobusOAuthenticator
 #    - local-google: oauthenticator.google.LocalGoogleOAuthenticator
-#    - local-okpy: oauthenticator.okpy.LocalOkpyOAuthenticator
 #    - local-openshift: oauthenticator.openshift.LocalOpenShiftOAuthenticator
 #    - mediawiki: oauthenticator.mediawiki.MWOAuthenticator
-#    - okpy: oauthenticator.okpy.OkpyOAuthenticator
 #    - openshift: oauthenticator.openshift.OpenShiftOAuthenticator
 #    - default: jupyterhub.auth.PAMAuthenticator
 #    - dummy: jupyterhub.auth.DummyAuthenticator
@@ -204,9 +202,6 @@ c = get_config()  #noqa
 #  
 #          Add this to the beginning of all JupyterHub URLs.
 #          Use base_url to run JupyterHub within an existing website.
-#  
-#          .. deprecated: 0.9
-#              Use JupyterHub.bind_url
 #  Default: '/'
 # c.JupyterHub.base_url = '/'
 
@@ -268,6 +263,22 @@ c = get_config()  #noqa
 ## DEPRECATED: does nothing
 #  Default: False
 # c.JupyterHub.confirm_no_ssl = False
+
+## Enable `__Host-` prefix on authentication cookies.
+#  
+#          The `__Host-` prefix on JupyterHub cookies provides further
+#          protection against cookie tossing when untrusted servers
+#          may control subdomains of your jupyterhub deployment.
+#  
+#          _However_, it also requires that cookies be set on the path `/`,
+#          which means they are shared by all JupyterHub components,
+#          so a compromised server component will have access to _all_ JupyterHub-related
+#          cookies of the visiting browser.
+#          It is recommended to only combine `__Host-` cookies with per-user domains.
+#  
+#          .. versionadded:: 4.1
+#  Default: False
+# c.JupyterHub.cookie_host_prefix_enabled = False
 
 ## Number of days for a login cookie to be valid.
 #          Default is two weeks.
@@ -554,9 +565,6 @@ c = get_config()  #noqa
 #          This is the address on which the proxy will listen. The default is to
 #          listen on all interfaces. This is the only address through which JupyterHub
 #          should be accessed by users.
-#  
-#          .. deprecated: 0.9
-#              Use JupyterHub.bind_url
 #  Default: ''
 # c.JupyterHub.ip = ''
 
@@ -692,9 +700,6 @@ c = get_config()  #noqa
 #          This is the port on which the proxy will listen.
 #          This is the only port through which JupyterHub
 #          should be accessed by users.
-#  
-#          .. deprecated: 0.9
-#              Use JupyterHub.bind_url
 #  Default: 8000
 # c.JupyterHub.port = 8000
 
@@ -731,6 +736,20 @@ c = get_config()  #noqa
 ## DEPRECATED since version 0.8. Use ConfigurableHTTPProxy.command
 #  Default: []
 # c.JupyterHub.proxy_cmd = []
+
+## Set the public URL of JupyterHub
+#  
+#          This will skip any detection of URL and protocol from requests,
+#          which isn't always correct when JupyterHub is behind
+#          multiple layers of proxies, etc.
+#          Usually the failure is detecting http when it's really https.
+#  
+#          Should include the full, public URL of JupyterHub,
+#          including the public-facing base_url prefix
+#          (i.e. it should include a trailing slash), e.g.
+#          https://jupyterhub.example.org/prefix/
+#  Default: ''
+# c.JupyterHub.public_url = ''
 
 ## Recreate all certificates used within JupyterHub on restart.
 #  
@@ -836,6 +855,43 @@ c = get_config()  #noqa
 #  Default: 'jupyterhub'
 # c.JupyterHub.statsd_prefix = 'jupyterhub'
 
+## Hook for constructing subdomains for users and services. Only used when
+#  `JupyterHub.subdomain_host` is set.
+#  
+#  There are two predefined hooks, which can be selected by name:
+#  
+#  - 'legacy' (deprecated) - 'idna' (default, more robust. No change for _most_
+#  usernames)
+#  
+#  Otherwise, should be a function which must not be async. A custom
+#  subdomain_hook should have the signature:
+#  
+#  def subdomain_hook(name, domain, kind) -> str:
+#      ...
+#  
+#  and should return a unique, valid domain name for all usernames.
+#  
+#  - `name` is the original name, which may need escaping to be safe as a domain
+#  name label - `domain` is the domain of the Hub itself - `kind` will be one of
+#  'user' or 'service'
+#  
+#  JupyterHub itself puts very little limit on usernames to accommodate a wide
+#  variety of Authenticators, but your identity provider is likely much more
+#  strict, allowing you to make assumptions about the name.
+#  
+#  The default behavior is to have all services on a single `services.{domain}`
+#  subdomain, and each user on `{username}.{domain}`. This is the 'legacy'
+#  scheme, and doesn't work for all usernames.
+#  
+#  The 'idna' scheme is a new scheme that should produce a valid domain name for
+#  any user, using IDNA encoding for unicode usernames, and a truncate-and-hash
+#  approach for any usernames that can't be easily encoded into a domain
+#  component.
+#  
+#  .. versionadded:: 5.0
+#  Default: 'idna'
+# c.JupyterHub.subdomain_hook = 'idna'
+
 ## Run single-user servers on subdomains of this host.
 #  
 #          This should be the full `https://hub.domain.tld[:port]`.
@@ -857,7 +913,24 @@ c = get_config()  #noqa
 #  Default: []
 # c.JupyterHub.template_paths = []
 
-## Extra variables to be passed into jinja templates
+## Extra variables to be passed into jinja templates.
+#  
+#          Values in dict may contain callable objects.
+#          If value is callable, the current user is passed as argument.
+#  
+#          Example::
+#  
+#              def callable_value(user):
+#                  # user is generated by handlers.base.get_current_user
+#                  with open("/tmp/file.txt", "r") as f:
+#                      ret = f.read()
+#                  ret = ret.replace("<username>", user.name)
+#                  return ret
+#  
+#              c.JupyterHub.template_vars = {
+#                  "key1": "value1",
+#                  "key2": callable_value,
+#              }
 #  Default: {}
 # c.JupyterHub.template_vars = {}
 
@@ -1271,6 +1344,15 @@ c = get_config()  #noqa
 #  Default: 30
 # c.Spawner.poll_interval = 30
 
+## Jitter fraction for poll_interval.
+#  
+#  Avoids alignment of poll calls for many Spawners, e.g. when restarting
+#  JupyterHub, which restarts all polls for running Spawners.
+#  
+#  `poll_jitter=0` means no jitter, 0.1 means 10%, etc.
+#  Default: 0.1
+# c.Spawner.poll_jitter = 0.1
+
 ## The port for single-user servers to listen on.
 #  
 #  Defaults to `0`, which uses a randomly allocated port number each time.
@@ -1299,14 +1381,31 @@ c = get_config()  #noqa
 #  
 #  Example::
 #  
-#      from subprocess import check_call
 #      def my_hook(spawner):
 #          username = spawner.user.name
-#          check_call(['./examples/bootstrap-script/bootstrap.sh', username])
+#          spawner.environment["GREETING"] = f"Hello {username}"
 #  
 #      c.Spawner.pre_spawn_hook = my_hook
 #  Default: None
 # c.Spawner.pre_spawn_hook = None
+
+## An optional hook function that you can implement to modify the ready event,
+#  which will be shown to the user on the spawn progress page when their server
+#  is ready.
+#  
+#  This can be set independent of any concrete spawner implementation.
+#  
+#  This maybe a coroutine.
+#  
+#  Example::
+#  
+#      async def my_ready_hook(spawner, ready_event):
+#          ready_event["html_message"] = f"Server {spawner.name} is ready for {spawner.user.name}"
+#          return ready_event
+#  
+#      c.Spawner.progress_ready_hook = my_ready_hook
+#  Default: None
+# c.Spawner.progress_ready_hook = None
 
 ## The list of scopes to request for $JUPYTERHUB_API_TOKEN
 #  
@@ -1366,19 +1465,88 @@ c = get_config()  #noqa
 #  Default: set()
 # c.Authenticator.admin_users = set()
 
-## Set of usernames that are allowed to log in.
+## Allow every user who can successfully authenticate to access JupyterHub.
 #  
-#  Use this with supported authenticators to restrict which users can log in.
-#  This is an additional list that further restricts users, beyond whatever
-#  restrictions the authenticator has in place. Any user in this list is granted
-#  the 'user' role on hub startup.
+#  False by default, which means for most Authenticators, _some_ allow-related
+#  configuration is required to allow users to log in.
 #  
-#  If empty, does not perform any additional restriction.
+#  Authenticator subclasses may override the default with e.g.::
 #  
-#  .. versionchanged:: 1.2
-#      `Authenticator.whitelist` renamed to `allowed_users`
+#      @default("allow_all")
+#      def _default_allow_all(self):
+#          # if _any_ auth config (depends on the Authenticator)
+#          if self.allowed_users or self.allowed_groups or self.allow_existing_users:
+#              return False
+#          else:
+#              return True
+#  
+#  .. versionadded:: 5.0
+#  
+#  .. versionchanged:: 5.0
+#      Prior to 5.0, `allow_all` wasn't defined on its own,
+#      and was instead implicitly True when no allow config was provided,
+#      i.e. `allowed_users` unspecified or empty on the base Authenticator class.
+#  
+#      To preserve pre-5.0 behavior,
+#      set `allow_all = True` if you have no other allow configuration.
+#  Default: False
+# c.Authenticator.allow_all = False
+
+## Allow existing users to login.
+#  
+#  Defaults to True if `allowed_users` is set for historical reasons, and False
+#  otherwise.
+#  
+#  With this enabled, all users present in the JupyterHub database are allowed to
+#  login. This has the effect of any user who has _previously_ been allowed to
+#  login via any means will continue to be allowed until the user is deleted via
+#  the /hub/admin page or REST API.
+#  
+#  .. warning::
+#  
+#     Before enabling this you should review the existing users in the
+#     JupyterHub admin panel at `/hub/admin`. You may find users existing
+#     there because they have previously been declared in config such as
+#     `allowed_users` or allowed to sign in.
+#  
+#  .. warning::
+#  
+#     When this is enabled and you wish to remove access for one or more
+#     users previously allowed, you must make sure that they
+#     are removed from the jupyterhub database. This can be tricky to do
+#     if you stop allowing an externally managed group of users for example.
+#  
+#  With this enabled, JupyterHub admin users can visit `/hub/admin` or use
+#  JupyterHub's REST API to add and remove users to manage who can login.
+#  
+#  .. versionadded:: 5.0
+#  Default: False
+# c.Authenticator.allow_existing_users = False
+
+## Set of usernames that should be allowed to login.
+#  
+#  If unspecified, grants no access. You must set at least one other `allow`
+#  configuration if any users are to have permission to access the Hub.
+#  
+#  Any usernames in `admin_users` will also be allowed to login.
 #  Default: set()
 # c.Authenticator.allowed_users = set()
+
+## Is there any allow config?
+#  
+#          Used to show a warning if it looks like nobody can access the Hub,
+#          which can happen when upgrading to JupyterHub 5,
+#          now that `allow_all` defaults to False.
+#  
+#          Deployments can set this explicitly to True to suppress
+#          the "No allow config found" warning.
+#  
+#          Will be True if any config tagged with `.tag(allow_config=True)`
+#          or starts with `allow` is truthy.
+#  
+#          .. versionadded:: 5.0
+#  Default: False
+# c.Authenticator.any_allow_config = False
 
 ## The max age (in seconds) of authentication info
 #          before forcing a refresh of user auth info.
@@ -1476,33 +1644,55 @@ c = get_config()  #noqa
 #  Default: False
 # c.Authenticator.manage_groups = False
 
+## Let authenticator manage roles
+#  
+#          If True, Authenticator.authenticate and/or .refresh_user
+#          may return a list of roles in the 'roles' field,
+#          which will be added to the database.
+#  
+#          When enabled, all role management will be handled by the
+#          authenticator; in particular, assignment of roles via
+#          `JupyterHub.load_roles` traitlet will not be possible.
+#  
+#          .. versionadded:: 5.0
+#  Default: False
+# c.Authenticator.manage_roles = False
+
+## The prompt string for the extra OTP (One Time Password) field.
+#  
+#  .. versionadded:: 5.0
+#  Default: 'OTP:'
+# c.Authenticator.otp_prompt = 'OTP:'
+
 ## An optional hook function that you can implement to do some bootstrapping work
 #  during authentication. For example, loading user account details from an
 #  external system.
 #  
 #  This function is called after the user has passed all authentication checks
 #  and is ready to successfully authenticate. This function must return the
-#  authentication dict reguardless of changes to it.
+#  auth_model dict reguardless of changes to it. The hook is called with 3
+#  positional arguments: `(authenticator, handler, auth_model)`.
 #  
-#  This maybe a coroutine.
+#  This may be a coroutine.
 #  
 #  .. versionadded: 1.0
 #  
 #  Example::
 #  
-#      import os, pwd
-#      def my_hook(authenticator, handler, authentication):
-#          user_data = pwd.getpwnam(authentication['name'])
+#      import os
+#      import pwd
+#      def my_hook(authenticator, handler, auth_model):
+#          user_data = pwd.getpwnam(auth_model['name'])
 #          spawn_data = {
 #              'pw_data': user_data
-#              'gid_list': os.getgrouplist(authentication['name'], user_data.pw_gid)
+#              'gid_list': os.getgrouplist(auth_model['name'], user_data.pw_gid)
 #          }
 #  
-#          if authentication['auth_state'] is None:
-#              authentication['auth_state'] = {}
-#          authentication['auth_state']['spawn_data'] = spawn_data
+#          if auth_model['auth_state'] is None:
+#              auth_model['auth_state'] = {}
+#          auth_model['auth_state']['spawn_data'] = spawn_data
 #  
-#          return authentication
+#          return auth_model
 #  
 #      c.Authenticator.post_auth_hook = my_hook
 #  Default: None
@@ -1520,6 +1710,38 @@ c = get_config()  #noqa
 #          launch will fail until the user logs in again.
 #  Default: False
 # c.Authenticator.refresh_pre_spawn = False
+
+## Prompt for OTP (One Time Password) in the login form.
+#  
+#  .. versionadded:: 5.0
+#  Default: False
+# c.Authenticator.request_otp = False
+
+## Reset managed roles to result of `load_managed_roles()` on startup.
+#  
+#          If True:
+#            - stale managed roles will be removed,
+#            - stale assignments to managed roles will be removed.
+#  
+#          Any role not present in `load_managed_roles()` will be considered
+#  'stale'.
+#  
+#          The 'stale' status for role assignments is also determined from
+#  `load_managed_roles()` result:
+#  
+#          - user role assignments status will depend on whether the `users` key
+#  is defined or not:
+#  
+#            * if a list is defined under the `users` key and the user is not listed, then the user role assignment will be considered 'stale',
+#            * if the `users` key is not provided, the user role assignment will be preserved;
+#          - service and group role assignments will be considered 'stale':
+#  
+#            * if not included in the `services` and `groups` list,
+#            * if the `services` and `groups` keys are not provided.
+#  
+#          .. versionadded:: 5.0
+#  Default: False
+# c.Authenticator.reset_managed_roles_on_startup = False
 
 ## Dictionary mapping authenticator usernames to JupyterHub users.
 #  
