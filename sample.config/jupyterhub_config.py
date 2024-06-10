@@ -172,6 +172,13 @@ c.JupyterHub.spawner_class = 'dockerspawner.DockerSpawner'
 #  Default: False
 # c.JupyterHub.upgrade_db = False
 
+## Enable event_loop_interval_seconds metric.
+#  
+#  Measures event-loop responsiveness.
+#  Default: True
+c.PeriodicMetricsCollector.event_loop_interval_enabled = False
+# 5.0.0: Causes ~2% CPU load if enabled - even with an idle JupyterHub.
+
 #------------------------------------------------------------------------------
 # Spawner(LoggingConfigurable) configuration
 #------------------------------------------------------------------------------
