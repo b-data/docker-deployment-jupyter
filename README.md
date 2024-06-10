@@ -175,9 +175,86 @@ went fine.
 ### Reference deployment
 
 Check out the reference deployment at <https://demo.jupyter.b-data.ch>.
+<!-- markdownlint-disable line-length -->
+* [Security Analysis](https://www.immuniweb.com/websec/demo.jupyter.b-data.ch/DtC46JBM/)  
+  <details><summary><b>Details</b></summary>
+  <p>
 
-* [Security Analysis](https://snyk.io/test/website-scanner/?test=220913_AiDcSF_73W)
-* [SSL Server Test](https://www.ssllabs.com/ssltest/analyze.html?d=demo.jupyter.b%2ddata.ch&hideResults=on)
+      ImmuniWeb® Community Edition: Website Security Test
+
+      Target: https://demo.jupyter.b-data.ch
+      IP Address: Not specified
+
+      Test completed
+
+      Source URL: https://demo.jupyter.b-data.ch
+      Tested URL: https://demo.jupyter.b-data.ch/hub/login?next=%2Fhub%2F
+      Tested IP Address: 51.154.68.67
+      Completed: June 10, 2024 10:35:25
+
+      ╭───────────────────╮ ╭───────────╮ ╭───────────────────────────────╮
+      │                   │ │  PCI DSS  │ │    Software Security Test     │
+      │        /\         │ ╰───────────╯ ╰───────────────────────────────╯
+      │       /  \        │ ╭───────────╮ ╭───────────────────────────────╮
+      │      / /\ \       │ │  EU GDPR  │ │     Headers Security Test     │
+      │     / ____ \      │ ╰───────────╯ ╰───────────────────────────────╯
+      │    /_/    \_\     │ ╭───────────╮
+      │                   │ │    CSP    │
+      ╰───────────────────╯ ╰───────────╯
+
+      Grade: A
+      PCI DSS Compliance Test: 2 Issues Found
+      EU GDPR Compliance Test: 3 Issues Found
+      Content Security Policy Test: No Major Issues Found
+      Software Security Test: 1 Issue Found
+      Headers Security Test: No Major Issues Found
+
+      HTTP Headers Security Notes:
+      [Misconfiguration or Weakness] Some HTTP headers related to security and privacy are missing or misconfigured.
+
+      Cookies Security Notes:
+      [Misconfiguration or Weakness] Some cookies have missing secure flags or attributes.
+
+  </p>
+  </details>
+* [SSL Security Test](https://www.immuniweb.com/ssl/demo.jupyter.b-data.ch/iIrCYOw5/)  
+  <details><summary><b>Details</b></summary>
+  <p>
+
+      ImmuniWeb® Community Edition: SSL Security Test
+
+      Target: demo.jupyter.b-data.ch:443
+      IP Address: Not specified
+
+      Test completed
+
+      Tested Hostname: demo.jupyter.b-data.ch
+      Tested Port: 443
+      Tested IP Address: 51.154.68.67
+      Completed: June 10, 2024 07:37:55
+
+      ╭───────────────────╮ ╭───────────╮ ╭───────────────────────────────╮
+      │                   │ │   HIPAA   │ │    Industry Best Practices    │
+      │       /\    _     │ ╰───────────╯ ╰───────────────────────────────╯
+      │      /  \ _| |_   │ ╭───────────╮
+      │     / /\ \_   _|  │ │    NIST   │
+      │    / ____ \|_|    │ ╰───────────╯
+      │   /_/    \_\      │ ╭───────────╮
+      │                   │ │  PCI DSS  │
+      ╰───────────────────╯ ╰───────────╯
+
+      Grade: A+
+      HIPAA Compliance Test: No Major Issues Found
+      NIST Compliance Test: No Major Issues Found
+      PCI DSS Compliance Test: Compliant
+      Industry Best Practices: No Issues Found
+
+      Notes:
+      [Good configuration] The server supports the most recent and secure TLS protocol version of TLS 1.3.0
+
+  </p>
+  </details>
+<!-- markdownlint-enable line-length -->
 
 Hardened and customised to meet the latest web application security standards.
 
