@@ -109,6 +109,7 @@ About:
 * [Further reading](#further-reading)
 * [Similar projects](#similar-projects)
 * [Contributing](#contributing)
+* [Support](#support)
 * [License](#license)
 * [Trademarks](#trademarks)
 
@@ -290,6 +291,13 @@ This project follows the
 Copyright © 2020 b-data GmbH
 
 Distributed under the terms of the [MIT License](LICENSE).
+
+## Support
+
+Community support: Open a new disussion
+[here](https://github.com/orgs/b-data/discussions).
+
+Commercial support: Contact b-data by [email](mailto:support@b-data.ch).
 
 ## Trademarks
 
