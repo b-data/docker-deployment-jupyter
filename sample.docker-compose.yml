@@ -6,7 +6,7 @@ services:
       - jupyter
       - webproxy
     volumes:
-      - ${JH_HOME:-.}/config/jupyterhub_config.py:/srv/jupyterhub/jupyterhub_config.py
+      - ${JH_HOME:-$PWD}/config/jupyterhub_config.py:/srv/jupyterhub/jupyterhub_config.py
       - /var/run/docker.sock:/var/run/docker.sock
     environment:
       - DOCKER_JUPYTERLAB_IMAGE=${DOCKER_JUPYTERLAB_IMAGE}
