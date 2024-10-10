@@ -241,7 +241,7 @@ c.Spawner.default_url = '/lab'
 #  environment, such as when they have their own conda environments / virtualenvs
 #  / containers.
 #  Default: False
-c.Spawner.disable_user_config = True
+# c.Spawner.disable_user_config = False
 
 ## Extra environment variables to set for the single-user server's process.
 #  
