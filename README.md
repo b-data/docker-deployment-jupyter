@@ -294,7 +294,7 @@ Distributed under the terms of the [MIT License](LICENSE).
 
 ## Support
 
-Community support: Open a new disussion
+Community support: Open a new discussion
 [here](https://github.com/orgs/b-data/discussions).
 
 Commercial support: Contact b-data by [email](mailto:support@b-data.ch).
