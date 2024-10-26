@@ -26,6 +26,7 @@ Features:
   * **Git**: A distributed version-control system for tracking changes in source
     code.
   * **Git LFS**: A Git extension for versioning large files.
+  * **Neovim**: Vim-fork focused on extensibility and usability.
   * **Pandoc**: A universal markup converter.
   * **Python**: An interpreted, object-oriented, high-level programming language
     with dynamic semantics.
@@ -78,6 +79,9 @@ About:
 * **Git LFS**
   * Homepage: <https://git-lfs.github.com>
   * Documentation: <https://github.com/git-lfs/git-lfs/tree/main/docs>
+* **Neovim**
+  * Homepage: <https://neovim.io>
+  * Manual: <https://neovim.io/doc>
 * **Pandoc**
   * Homepage: <https://pandoc.org>
   * Manual: <https://pandoc.org/MANUAL.html>
